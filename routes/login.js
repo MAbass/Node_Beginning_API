@@ -19,6 +19,7 @@ router.get("/me", auth, async (req, res) => {
 });
 
 router.post('/', async (req, res, next) => {
+    // debug(req.body);
     const {error} = validateLogin(req.body);
     if (error) res.status(400).send({message: error.details[0].message})
     else {

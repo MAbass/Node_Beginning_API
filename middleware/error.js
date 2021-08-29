@@ -1,18 +1,8 @@
 const logger = require('../config/logger');
 
 function error(err, req, res, next) {
-    logger.error(err.message);
-    //information
-
-    //warning
-
-    //verbose
-
-    //debug
-
-    //silly
-
-
+    console.log(err);
+    // logger.error(err.message);
     res.status(500).send('The server encountered a problem');
     next();
 }

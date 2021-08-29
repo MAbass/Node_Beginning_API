@@ -3,22 +3,24 @@ const express = require('express');
 const {MovieModel, validateMovie} = require('../models/movies');
 const auth = require('../middleware/auth')
 const adminAuth = require('../middleware/admin')
+const upload = require("../config/multer");
 
 const router = express.Router();
 
 
-router.post('/add', auth, async (req, res) => {
+router.post('/add',  [upload.single('file'), auth], async (req, res) => {
+    const {file, body} = req;
+    // console.log(file);
     let movieSave = null;
-
-    const {error} = validateMovie(req.body);
+    const {error} = validateMovie(body);
     if (error) return res.status(400).send(error.details[0].message);
-    const movie = MovieModel(_.pick(req.body, ["author", "title", "description"]));
+    const movie = MovieModel(_.pick(body, ["author", "title", "description"]));
     movieSave = await movie.save();
     res.send(_.pick(movieSave, ["author", "title", "description", "_id"]));
 });
 
 router.get('/', auth, async (req, res) => {
-    let allMovies = await MovieModel.find().select('[-__v, -_id]')
+    let allMovies = await MovieModel.find().select('-__v')
     res.send(allMovies);
 
 });

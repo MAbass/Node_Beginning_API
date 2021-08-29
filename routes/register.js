@@ -9,10 +9,12 @@ const router = express.Router();
 
 if (!config.get('jwtPrivateKey')) {
     debug("FATAL ERROR: jwtPrivateKey is not found");
+    debug("The private key is not provided");
     process.exit(1);
 }
 
 router.post('/', async (req, res) => {
+    // debug(req.body);
     const {error} = validateUser(req.body);
     if (error) res.status(400).send({message: error.details[0].message})
     else {
